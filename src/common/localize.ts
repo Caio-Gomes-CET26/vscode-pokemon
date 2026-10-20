@@ -1,8 +1,13 @@
+// @ts-ignore VS Code provides this module at runtime; its declarations may be unavailable in the editor.
 import * as fs from 'fs';
+// @ts-ignore VS Code provides this module at runtime; its declarations may be unavailable in the editor.
 import * as path from 'path';
+// @ts-ignore VS Code provides this module at runtime; its declarations may be unavailable in the editor.
 import * as vscode from 'vscode';
 import { POKEMON_DATA } from './pokemon-data';
 import { PokemonType } from './types';
+
+declare const __dirname: string;
 
 /**
  * Cache for loaded Pokemon translations
@@ -19,7 +24,7 @@ export const SUPPORTED_LOCALES = ['en-US', 'fr-FR', 'de-DE', 'ja-JP'] as const;
 
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
-const GENERATIONS = ['gen1', 'gen2', 'gen3', 'gen4', 'gen5'] as const;
+const GENERATIONS = ['gen1', 'gen2', 'gen3', 'gen4', 'gen5', 'blahaj'] as const;
 const FALLBACK_LOCALE = 'en-US';
 
 /**

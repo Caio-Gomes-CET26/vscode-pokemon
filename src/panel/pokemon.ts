@@ -167,4 +167,5 @@ export const POKEMON_NAMES: ReadonlyArray<string> = [
   'Louie',
   'Jet',
   'Banjo',
+  'blahaj',
 ];

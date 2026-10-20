@@ -5165,14 +5165,25 @@ const POKEMON_DATA_RAW: Record<string, PokemonConfig> = {
     cry: 'Genesect!',
     possibleColors: [],
   },
+  blahaj: {
+    id: 999, // ID único fictício
+    name: 'Blahaj',
+    generation: PokemonGeneration.Gen1, // Pode deixar na Gen 1 para aparecer na lista
+    cry: 'Blahaj!',
+    possibleColors: [PokemonColor.default], // Corrigido para usar o enum do TypeScript
+    originalSpriteSize: 64, // Essencial para o VS Code reconhecer que ele tem largura maior (64x32)
+  },
 };
 
 export const POKEMON_DATA: Record<PokemonType, PokemonConfig> =
-  Object.fromEntries(
-    Object.entries(POKEMON_DATA_RAW).filter(
-      ([, config]) => config.possibleColors.length > 0,
-    ),
-  ) as Record<PokemonType, PokemonConfig>;
+  Object.keys(POKEMON_DATA_RAW).reduce((filtered, key) => {
+    const pokemonType = key as PokemonType;
+    const config = POKEMON_DATA_RAW[pokemonType];
+    if (config.possibleColors.length > 0) {
+      filtered[pokemonType] = config;
+    }
+    return filtered;
+  }, {} as Record<PokemonType, PokemonConfig>);
 
 export function getAllPokemon(): PokemonType[] {
   return Object.keys(POKEMON_DATA) as PokemonType[];
@@ -5181,9 +5192,9 @@ export function getAllPokemon(): PokemonType[] {
 export function getPokemonByGeneration(
   generation: PokemonGeneration,
 ): PokemonType[] {
-  return Object.entries(POKEMON_DATA)
-    .filter(([, config]) => config.generation === generation)
-    .map(([key]) => key as PokemonType);
+  return Object.keys(POKEMON_DATA)
+    .filter((key) => POKEMON_DATA[key as PokemonType].generation === generation)
+    .map((key) => key as PokemonType);
 }
 
 export function getDefaultPokemon(): PokemonType {
