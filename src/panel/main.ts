@@ -144,6 +144,61 @@ function addPokemonToPanel(
     collisionElement,
   );
 
+  // --- INÍCIO DO CÓDIGO DRAG & DROP ---
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let initialLeft = 0;
+  let initialBottom = 0;
+
+  collisionElement.style.cursor = 'grab';
+
+  collisionElement.addEventListener('mousedown', (e: MouseEvent) => {
+    isDragging = true;
+    collisionElement.style.cursor = 'grabbing';
+
+    startX = e.clientX;
+    startY = e.clientY;
+
+    initialLeft = parseInt(pokemonSpriteElement.style.left || '0', 10);
+    initialBottom = parseInt(pokemonSpriteElement.style.bottom || '0', 10);
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      if (!isDragging) {
+        return;
+      }
+
+      // Calcula a variação do rato
+      const deltaX = moveEvent.clientX - startX;
+      const deltaY = moveEvent.clientY - startY; // No CSS 'bottom', mover para baixo diminui o valor
+
+      const newLeft = initialLeft + deltaX;
+      const newBottom = initialBottom - deltaY;
+
+      // Atualiza a posição nos elementos
+      pokemonSpriteElement.style.left = `${newLeft}px`;
+      pokemonSpriteElement.style.bottom = `${newBottom}px`;
+      collisionElement.style.left = `${newLeft}px`;
+      collisionElement.style.bottom = `${newBottom}px`;
+      speechBubbleElement.style.left = `${newLeft}px`;
+      speechBubbleElement.style.bottom = `${newBottom + originalSpriteSize}px`;
+    };
+
+    const onMouseUp = () => {
+      isDragging = false;
+      collisionElement.style.cursor = 'grab';
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      // Atualiza o estado para salvar a nova posição
+      saveState(stateApi);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+  // --- FIM DO CÓDIGO DRAG & DROP ---
+
   var speechBubbleElement: HTMLImageElement = document.createElement('img');
   speechBubbleElement.className = `bubble bubble-${pokemonSize} b-${originalSpriteSize}`;
   speechBubbleElement.src = `${basePokemonUri}/heart.png`;
