@@ -168,12 +168,18 @@ function addPokemonToPanel(
         return;
       }
 
-      // Calcula a variação do rato
       const deltaX = moveEvent.clientX - startX;
-      const deltaY = moveEvent.clientY - startY; // No CSS 'bottom', mover para baixo diminui o valor
+      const deltaY = moveEvent.clientY - startY;
 
-      const newLeft = initialLeft + deltaX;
-      const newBottom = initialBottom - deltaY;
+      let newLeft = initialLeft + deltaX;
+      let newBottom = initialBottom - deltaY;
+
+      // Limites da tela para o pet não sumir para fora
+      const maxLeft = window.innerWidth - pokemonSpriteElement.width;
+      const maxBottom = window.innerHeight - pokemonSpriteElement.height;
+
+      newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+      newBottom = Math.max(floor, Math.min(newBottom, maxBottom));
 
       // Atualiza a posição nos elementos
       pokemonSpriteElement.style.left = `${newLeft}px`;
